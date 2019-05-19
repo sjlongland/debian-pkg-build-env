@@ -1,8 +1,9 @@
-# Install all the dependencies needed to build things.
-FROM debian:stretch-slim
+FROM ubuntu:bionic
 RUN	apt-get update \
 	&& apt-get install -y gnupg1 gnupg2 \
-	&& echo 'deb [arch=amd64,i386,ppc64el] http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.3/debian stretch main' \
+	&& printf 'deb [arch=amd64,i386,ppc64el] http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.3/%s %s main' \
+		$( lsb_release -si | tr A-Z a-z ) \
+		$( lsb_release -sc | tr A-Z a-z ) \
 		> /etc/apt/sources.list.d/mariadb.list \
 	&& apt-key adv --recv-keys --keyserver \
 		keyserver.ubuntu.com 0xF1656F24C74CD1D8 \
