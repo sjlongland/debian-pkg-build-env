@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 # Force non-interactive behaviour out of debconf:
 ENV DEBIAN_FRONTEND noninteractive
 
