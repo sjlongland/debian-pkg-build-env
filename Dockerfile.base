@@ -19,7 +19,7 @@ RUN	apt-get update \
 		python3-passlib python3-lxml python3-iso8601 gosu gnupg2 \
 		python3-virtualenv mysql-client virtualenv wget curl git \
 		build-essential \
-	&& curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+	&& curl -sL https://deb.nodesource.com/setup_12.x | bash - \
 	&& apt-get update \
 	&& apt-get install -y nodejs \
 	&& apt-get clean \
