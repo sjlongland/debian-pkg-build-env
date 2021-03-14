@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install everything
 RUN	apt-get update \
 	&& apt-get install -y gnupg1 gnupg2 lsb-release \
-	&& printf 'deb [arch=amd64,i386,ppc64el] http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.4/%s %s main\n' \
+	&& printf 'deb [arch=amd64,i386,ppc64el] http://mariadb.melbourneitmirror.net/repo/10.5/%s %s main\n' \
 		$( lsb_release -si | tr A-Z a-z ) \
 		$( lsb_release -sc | tr A-Z a-z ) \
 		> /etc/apt/sources.list.d/mariadb.list \
