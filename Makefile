@@ -18,7 +18,8 @@ DOCKERFILE_IMAGE=$(shell echo $(1) | sed -e 's:.build/Dockerfile\.::; s/_/:/g; s
 all: $(PUSH_FILES)
 
 clean:
-	rm -f .build
+	rm -fr .build
+	docker rmi $(patsubst %,$(OUTPUT_IMAGE_NAME):%,$(TARGET_NAMES))
 
 .build:
 	mkdir $@
