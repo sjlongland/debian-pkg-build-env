@@ -2,6 +2,7 @@
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV MARIADB_RELEASE=10.6.12
+ENV NODEJS_VER=18
 
 # Install everything
 RUN	apt-get update \
@@ -39,7 +40,7 @@ RUN	apt-get update \
 	else \
 		apt-get install -y dh-virtualenv ; \
 	fi \
-	&& curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+	&& curl -sL https://deb.nodesource.com/setup_${NODEJS_VER}.x | bash - \
 	&& apt-get update \
 	&& apt-get install -y nodejs \
 	&& apt-get clean \
