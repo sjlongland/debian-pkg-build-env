@@ -16,6 +16,7 @@ PUSH_FILES=$(patsubst %,.build/push-%,$(TARGET_NAMES))
 DOCKERFILE_IMAGE=$(shell echo $(1) | sed -e 's:.build/Dockerfile\.::; s/_/:/g; s:~:/:g;)
 
 all: $(PUSH_FILES)
+images: $(IMAGE_FILES)
 
 clean:
 	rm -fr .build
