@@ -9,7 +9,7 @@ RUN	apt-get update \
 	&& apt-get install -y gnupg1 gnupg2 lsb-release \
 	&& export dist=$( lsb_release -si | tr A-Z a-z ) \
 	&& export codename=$( lsb_release -sc | tr A-Z a-z ) \
-	&& export distver=$( lsb_release -sr ) \
+	&& export distver=$( lsb_release -sr | sed -e 's:\.::' ) \
 	&& if [ "${dist}" = "ubuntu" ]; then \
 		export release=ubu${distver}; \
 	else \
