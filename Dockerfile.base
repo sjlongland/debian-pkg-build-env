@@ -1,12 +1,22 @@
 # Force non-interactive behaviour out of debconf:
 ENV DEBIAN_FRONTEND noninteractive
 
+ENV MARIADB_RELEASE=10.6.12
+
 # Install everything
 RUN	apt-get update \
 	&& apt-get install -y gnupg1 gnupg2 lsb-release \
+	&& export dist=$( lsb_release -si | tr A-Z a-z ) \
+	&& export codename=$( lsb_release -sc | tr A-Z a-z ) \
+	&& export distver=$( lsb_release -sr ) \
+	&& if [ "${dist}" = "ubuntu" ]; then \
+		export release=ubu${distver}; \
+	else \
+		export release=deb${distver}; \
+	fi \
 	&& printf 'deb [arch=amd64] https://mirror.realcompute.io/mariadb/repo/10.6/%s %s main\n' \
-		$( lsb_release -si | tr A-Z a-z ) \
-		$( lsb_release -sc | tr A-Z a-z ) \
+		${dist} \
+		${codename} \
 		> /etc/apt/sources.list.d/mariadb.list \
 	&& apt-key adv --recv-keys --keyserver \
 		keyserver.ubuntu.com 0xF1656F24C74CD1D8 \
@@ -17,9 +27,14 @@ RUN	apt-get update \
 		python3-pip python3-dev libffi-dev argon2 fakeroot dpkg-dev \
 		lsb-release python3-pymysql python3-tz python3-yaml \
 		python3-passlib python3-lxml python3-iso8601 gosu gnupg2 \
-		python3-virtualenv mariadb-client virtualenv wget curl git \
-		build-essential libmariadbd-dev \
-	&& if [ "$( lsb_release -si )" = "Ubuntu" ]; then \
+		python3-virtualenv \
+		mariadb-client=1:${MARIADB_RELEASE}+maria~${release} \
+		libmariadb-dev=1:${MARIADB_RELEASE}+maria~${release} \
+		libmariadb-dev-compat=1:${MARIADB_RELEASE}+maria~${release} \
+		libmariadbd-dev=1:${MARIADB_RELEASE}+maria~${release} \
+		libmariadbd19=1:${MARIADB_RELEASE}+maria~${release} \
+		virtualenv wget curl git build-essential \
+	&& if [ "${dist}" = "ubuntu" ]; then \
 		pip3 install git+https://github.com/spotify/dh-virtualenv.git ; \
 	else \
 		apt-get install -y dh-virtualenv ; \
