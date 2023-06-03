@@ -1,6 +1,12 @@
 # Force non-interactive behaviour out of debconf:
 ENV DEBIAN_FRONTEND noninteractive
 
+# Set the MariaDB mirror
+# first %s is release major/minor
+# second %s is the OS name (Debian/Ubuntu),
+# third %s is the OS codename
+ARG MARIADB_MIRROR="https://mirror.realcompute.io/mariadb/repo/%s/%s %s main"
+
 ENV MARIADB_RELEASE=10.11.3
 ENV NODEJS_VER=18
 
@@ -15,7 +21,8 @@ RUN	apt-get update \
 	else \
 		export release=deb${distver}; \
 	fi \
-	&& printf 'deb [arch=amd64] https://mirror.realcompute.io/mariadb/repo/10.6/%s %s main\n' \
+	&& printf "deb [arch=amd64] ${MARIADB_MIRROR}\\n" \
+		${MARIADB_RELEASE%.*} \
 		${dist} \
 		${codename} \
 		> /etc/apt/sources.list.d/mariadb.list \
