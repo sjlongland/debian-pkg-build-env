@@ -1,5 +1,5 @@
 OUTPUT_IMAGE_NAME ?= sjlongland/debian-pkg-build-env
-TARGETS ?= latest=debian:bullseye-slim latest-ubuntu=ubuntu:focal
+TARGETS ?= latest=debian:bullseye-slim latest-ubuntu=ubuntu:jammy
 
 # Local overrides
 -include local.mk
