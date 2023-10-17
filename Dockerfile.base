@@ -21,13 +21,22 @@ RUN	apt-get update \
 	else \
 		export release=deb${distver}; \
 	fi \
-	&& printf "deb [arch=amd64] ${MARIADB_MIRROR}\\n" \
+	&& apt-get update \
+	&& apt-get install -y curl ca-certificates wget \
+	&& printf "deb [signed-by=/etc/apt/keyrings/mariadb.gpg arch=amd64] ${MARIADB_MIRROR}\\n" \
 		${MARIADB_RELEASE%.*} \
 		${dist} \
 		${codename} \
 		> /etc/apt/sources.list.d/mariadb.list \
-	&& apt-key adv --recv-keys --keyserver \
-		keyserver.ubuntu.com 0xF1656F24C74CD1D8 \
+	&& echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] " \
+		"https://deb.nodesource.com/node_$NODEJS_VER.x nodistro main" \
+		> /etc/apt/sources.list.d/nodesource.list \
+	&& curl -fsSL \
+		https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+		| gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+	&& curl -fsSL \
+		'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x177f4010fe56ca3336300305f1656f24c74cd1d8' \
+		| gpg --dearmor -o /etc/apt/keyrings/mariadb.gpg \
 	&& apt-get update \
 	&& apt-get install -y \
 		pkg-config libssl-dev libmariadb-dev-compat libmysqlclient18 \
@@ -35,20 +44,17 @@ RUN	apt-get update \
 		python3-pip python3-dev libffi-dev argon2 fakeroot dpkg-dev \
 		lsb-release python3-pymysql python3-tz python3-yaml \
 		python3-passlib python3-lxml python3-iso8601 gosu gnupg2 \
-		python3-virtualenv \
+		python3-virtualenv nodejs \
 		mariadb-client=1:${MARIADB_RELEASE}+maria~${release} \
 		libmariadb-dev=1:${MARIADB_RELEASE}+maria~${release} \
 		libmariadb-dev-compat=1:${MARIADB_RELEASE}+maria~${release} \
 		libmariadbd-dev=1:${MARIADB_RELEASE}+maria~${release} \
 		libmariadbd19=1:${MARIADB_RELEASE}+maria~${release} \
-		virtualenv wget curl git build-essential \
+		virtualenv git build-essential \
 	&& if [ "${dist}" = "ubuntu" ]; then \
 		pip3 install git+https://github.com/spotify/dh-virtualenv.git ; \
 	else \
 		apt-get install -y dh-virtualenv ; \
 	fi \
-	&& curl -sL https://deb.nodesource.com/setup_${NODEJS_VER}.x | bash - \
-	&& apt-get update \
-	&& apt-get install -y nodejs \
 	&& apt-get clean \
 	&& rm -fr /var/lib/apt/lists/*
