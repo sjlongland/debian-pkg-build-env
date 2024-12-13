@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # third %s is the OS codename
 ARG MARIADB_MIRROR="https://mirror.realcompute.io/mariadb/repo/%s/%s %s main"
 
-ENV MARIADB_RELEASE=11.1.2
+ENV MARIADB_RELEASE=11.2.6
 ENV NODEJS_VER=18
 
 # Install everything
