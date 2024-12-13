@@ -1,11 +1,11 @@
 # Force non-interactive behaviour out of debconf:
 ENV DEBIAN_FRONTEND noninteractive
 
-# Set the MariaDB mirror
-# first %s is release major/minor
-# second %s is the OS name (Debian/Ubuntu),
-# third %s is the OS codename
-ARG MARIADB_MIRROR="https://mirror.realcompute.io/mariadb/repo/%s/%s %s main"
+# Set the URI of the MariaDB repository configurator
+ARG MARIADB_REPO_SETUP_URI="https://r.mariadb.com/downloads/mariadb_repo_setup"
+
+# Corresponding SHA-256 hash
+ARG MARIADB_REPO_SETUP_SHA256="6083ef1974d11f49d42ae668fb9d513f7dc2c6276ffa47caed488c4b47268593"
 
 ENV MARIADB_RELEASE=11.1.2
 ENV NODEJS_VER=18
@@ -23,11 +23,10 @@ RUN	apt-get update \
 	fi \
 	&& apt-get update \
 	&& apt-get install -y curl ca-certificates wget \
-	&& printf "deb [signed-by=/etc/apt/keyrings/mariadb.gpg arch=amd64] ${MARIADB_MIRROR}\\n" \
-		${MARIADB_RELEASE%.*} \
-		${dist} \
-		${codename} \
-		> /etc/apt/sources.list.d/mariadb.list \
+	&& wget -O /tmp/mariadb_repo_setup "${MARIADB_REPO_SETUP_URI}" \
+	&& printf "%s  /tmp/mariadb_repo_setup\n" "${MARIADB_REPO_SETUP_SHA256}" \
+		| sha256sum -c - \
+	&& /bin/bash /tmp/mariadb_repo_setup \
 	&& echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] " \
 		"https://deb.nodesource.com/node_$NODEJS_VER.x nodistro main" \
 		> /etc/apt/sources.list.d/nodesource.list \
