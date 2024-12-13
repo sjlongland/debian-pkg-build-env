@@ -52,7 +52,8 @@ RUN	apt-get update \
 		libmariadbd19=1:${MARIADB_RELEASE}+maria~${release} \
 		virtualenv git build-essential \
 	&& if [ "${dist}" = "ubuntu" ]; then \
-		pip3 install git+https://github.com/spotify/dh-virtualenv.git ; \
+		pip3 install --break-system-packages \
+			git+https://github.com/spotify/dh-virtualenv.git ; \
 	else \
 		apt-get install -y dh-virtualenv ; \
 	fi \
