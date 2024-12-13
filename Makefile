@@ -20,7 +20,7 @@ images: $(IMAGE_FILES)
 
 clean:
 	rm -fr .build
-	docker rmi $(patsubst %,$(OUTPUT_IMAGE_NAME):%,$(TARGET_NAMES))
+	-docker rmi $(patsubst %,$(OUTPUT_IMAGE_NAME):%,$(TARGET_NAMES))
 
 .build:
 	mkdir $@
